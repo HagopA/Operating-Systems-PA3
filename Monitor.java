@@ -69,7 +69,8 @@ public class Monitor extends DiningPhilosophers
 	 */
 	public synchronized void putDown(final int piTID)
 	{
-		// ...
+		this.everyone[piTID].myStatus = Philosopher.PhilStatus.THINKING;
+		this.notifyAll();
 	}
 
 	/**
