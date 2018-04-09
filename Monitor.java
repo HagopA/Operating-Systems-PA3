@@ -43,14 +43,12 @@ public class Monitor extends DiningPhilosophers
 		return true;
 	}
         
-        private synchronized boolean isTalking(int targetPhil ){
+        private synchronized boolean isTalking(){
           
             for(int i = 0; i < everyone.length; i++){
             
             if(this.everyone[i].myStatus == Philosopher.PhilStatus.TALKING){
-              
                 return true;
-              
                 }
             }
             return false;
@@ -97,9 +95,17 @@ public class Monitor extends DiningPhilosophers
 	public synchronized void requestTalk(final int piTID)
 	{
 		if(this.everyone[piTID].myStatus == Philosopher.PhilStatus.EATING || isTalking()){
+                    try{
+                        
+                    this.wait();
+               
+                    }catch(InterruptedException e){
+                        
+                    }
                     
                 }
-                
+                    notifyAll();
+                    this.everyone[piTID].myStatus = Philosopher.PhilStatus.TALKING;
 	}
 
 	/**
