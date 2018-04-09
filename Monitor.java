@@ -1,3 +1,5 @@
+package common;
+
 /**
  * Class Monitor
  * To synchronize dining philosophers.
@@ -5,6 +7,8 @@
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
  */
 import common.BaseThread;
+import java.util.Arrays;
+
 public class Monitor extends DiningPhilosophers
 {
 	/*
@@ -38,6 +42,19 @@ public class Monitor extends DiningPhilosophers
 		}
 		return true;
 	}
+        
+        private synchronized boolean isTalking(int targetPhil ){
+          
+            for(int i = 0; i < everyone.length; i++){
+            
+            if(this.everyone[i].myStatus == Philosopher.PhilStatus.TALKING){
+              
+                return true;
+              
+                }
+            }
+            return false;
+        }
 	 /**
 	 * Grants request (returns) to eat when both chopsticks/forks are available.
 	 * Else forces the philosopher to wait()
@@ -77,16 +94,19 @@ public class Monitor extends DiningPhilosophers
 	 * Only one philopher at a time is allowed to philosophy
 	 * (while she is not eating).
 	 */
-	public synchronized void requestTalk()
+	public synchronized void requestTalk(final int piTID)
 	{
-		// ...
+		if(this.everyone[piTID].myStatus == Philosopher.PhilStatus.EATING || isTalking()){
+                    
+                }
+                
 	}
 
 	/**
 	 * When one philosopher is done talking stuff, others
 	 * can feel free to start talking.
 	 */
-	public synchronized void endTalk()
+	public synchronized void endTalk(final int piTID)
 	{
 		// ...
 	}
