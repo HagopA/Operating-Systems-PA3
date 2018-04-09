@@ -1,4 +1,3 @@
-package common;
 
 /**
  * Class Monitor
@@ -6,9 +5,12 @@ package common;
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
  */
-import common.BaseThread;
-import java.util.Arrays;
-
+/*	Programming Assignment 3
+	Name: Hagop Awakian, Bilal Rana
+	Student ID: 27747632, 40013408
+	COMP 346 Section WW
+	Instructor: Kerly Titus
+ */
 public class Monitor extends DiningPhilosophers
 {
 	/*
@@ -16,12 +18,13 @@ public class Monitor extends DiningPhilosophers
 	 * Data members
 	 * ------------
 	 */
+	private Philosopher everyone[];
 	/**
 	 * Constructor
 	 */
 	public Monitor(int piNumberOfPhilosophers)
 	{
-		// TODO: set appropriate number of chopsticks based on the # of philosophers
+		everyone = new Philosopher[piNumberOfPhilosophers];
 	}
 
 	/*
@@ -29,51 +32,59 @@ public class Monitor extends DiningPhilosophers
 	 * User-defined monitor procedures
 	 * -------------------------------
 	 */
-	Philosopher everyone[] = new Philosopher[4];
 	public synchronized void copyPhilArr(Philosopher phil[])
 	{
-		everyone = phil;
+		for(int i = 0; i < phil.length; i++)
+		{
+			everyone[i] = phil[i];
+		}
 	}
 	private synchronized boolean canPickUp(int targetPhil)
 	{
-		if(this.everyone[targetPhil+1].myStatus == Philosopher.PhilStatus.EATING || this.everyone[targetPhil-1].myStatus == Philosopher.PhilStatus.EATING)
+		int rightPhil = (targetPhil+1) % everyone.length;
+		int leftPhil = (everyone.length+targetPhil-1) % everyone.length;
+		if(this.everyone[rightPhil].myStatus == Philosopher.PhilStatus.EATING || this.everyone[leftPhil].myStatus == Philosopher.PhilStatus.EATING)
 		{
 			return false;
 		}
 		return true;
 	}
-        
-        private synchronized boolean isTalking(){
-          
-            for(int i = 0; i < everyone.length; i++){
-            
-            if(this.everyone[i].myStatus == Philosopher.PhilStatus.TALKING){
-                return true;
-                }
-            }
-            return false;
-        }
-	 /**
+
+	private synchronized boolean isTalking()
+	{
+		for(int i = 0; i < everyone.length; i++)
+		{
+			if(this.everyone[i].myStatus == Philosopher.PhilStatus.TALKING)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	/**
 	 * Grants request (returns) to eat when both chopsticks/forks are available.
 	 * Else forces the philosopher to wait()
 	 */
 	public synchronized void pickUp(final int piTID)
 	{
-
-		if(canPickUp(piTID))
+		boolean flag = true;
+		while(flag)
 		{
-			this.notifyAll();
-			this.everyone[piTID].myStatus = Philosopher.PhilStatus.EATING;
-		}
-		else
-		{
-			try
+			if(canPickUp(piTID-1))
 			{
-				this.wait();
+				this.everyone[piTID-1].myStatus = Philosopher.PhilStatus.EATING;
+				flag = false;
 			}
-			catch(InterruptedException e)
+			else
 			{
-
+				try
+				{
+					this.wait();
+				}
+				catch(InterruptedException e)
+				{
+					System.out.println("Thread error.");
+				}
 			}
 		}
 	}
@@ -84,28 +95,27 @@ public class Monitor extends DiningPhilosophers
 	 */
 	public synchronized void putDown(final int piTID)
 	{
-		this.everyone[piTID].myStatus = Philosopher.PhilStatus.THINKING;
+		this.everyone[piTID-1].myStatus = Philosopher.PhilStatus.THINKING;
 		this.notifyAll();
 	}
-
 	/**
 	 * Only one philopher at a time is allowed to philosophy
 	 * (while she is not eating).
 	 */
 	public synchronized void requestTalk(final int piTID)
 	{
-		if(this.everyone[piTID].myStatus == Philosopher.PhilStatus.EATING || isTalking()){
-                    try{
-                        
-                    this.wait();
-               
-                    }catch(InterruptedException e){
-                        
-                    }
-                    
-                }
-                    notifyAll();
-                    this.everyone[piTID].myStatus = Philosopher.PhilStatus.TALKING;
+		if(this.isTalking())
+		{
+			try
+			{
+				this.wait();
+			}
+			catch(InterruptedException e)
+			{
+				System.out.println("Thread error.");
+			}
+		}
+		this.everyone[piTID-1].myStatus = Philosopher.PhilStatus.TALKING;
 	}
 
 	/**
@@ -113,9 +123,10 @@ public class Monitor extends DiningPhilosophers
 	 * can feel free to start talking.
 	 */
 	public synchronized void endTalk(final int piTID)
-	{   
-            this.notifyAll();
-            this.everyone[piTID].myStatus = Philosopher.PhilStatus.THINKING;
+	{
+
+		this.everyone[piTID-1].myStatus = Philosopher.PhilStatus.THINKING;
+		this.notifyAll();
 	}
 }
 

@@ -1,12 +1,16 @@
-package common;
 import common.BaseThread;
 import java.util.Random;
-
 /**
  * Class Philosopher.
  * Outlines main subrutines of our virtual philosopher.
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
+ */
+/*	Programming Assignment 3
+	Name: Hagop Awakian, Bilal Rana
+	Student ID: 27747632, 40013408
+	COMP 346 Section WW
+	Instructor: Kerly Titus
  */
 public class Philosopher extends BaseThread
 {
@@ -31,7 +35,6 @@ public class Philosopher extends BaseThread
 		try
 		{
 			System.out.println("TID " + getTID() + " has started eating.");
-			myStatus = PhilStatus.EATING;
 			yield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
 			yield();
@@ -58,7 +61,6 @@ public class Philosopher extends BaseThread
 		try
 		{
 			System.out.println("TID " + getTID() + " has started thinking.");
-			myStatus = PhilStatus.THINKING;
 			yield();
 			sleep((long)(Math.random() * TIME_TO_WASTE));
 			yield();
@@ -83,7 +85,6 @@ public class Philosopher extends BaseThread
 	{
 		// ...
 		System.out.println("TID " + getTID() + " started talking.");
-		myStatus = PhilStatus.TALKING;
 		yield();
 		saySomething();
 		yield();
@@ -149,28 +150,6 @@ public class Philosopher extends BaseThread
 			astrPhrases[(int)(Math.random() * astrPhrases.length)]
 		);
 	}
-	int rightPi;
-	int leftPi;
-	int current;
-
-//	private void getLeftandRightPi(Philosopher rightPi, Philosopher leftPi, Philosopher current, int piTID)
-// {
-//		for(Philosopher i : DiningPhilosophers.allPhilosophers)
-// 		{
-//			if (i.getTID() == ((piTID + 1)%DiningPhilosophers.allPhilosophers.length))
-// 			{
-//				rightPi = i;
-//			}
-// 			else if (i.getTID() == ((piTID + 2)%DiningPhilosophers.allPhilosophers.length))
-// 			{
-//				leftPi = i;
-//			}
-// 			else if (i.getTID() == piTID)
-// 			{
-//				current = i;
-//			}
-//		}
-//	}
 }
 
 // EOF

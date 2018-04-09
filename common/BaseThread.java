@@ -1,7 +1,5 @@
 package common;
-
 import java.util.Random;
-
 /**
  * Class BaseThread
  * Simply one customized base class for many of our own threads.
