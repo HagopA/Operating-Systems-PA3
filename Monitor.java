@@ -113,8 +113,9 @@ public class Monitor extends DiningPhilosophers
 	 * can feel free to start talking.
 	 */
 	public synchronized void endTalk(final int piTID)
-	{
-		// ...
+	{   
+            this.notifyAll();
+            this.everyone[piTID].myStatus = Philosopher.PhilStatus.THINKING;
 	}
 }
 
