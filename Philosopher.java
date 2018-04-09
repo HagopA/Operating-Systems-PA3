@@ -1,5 +1,5 @@
+package common;
 import common.BaseThread;
-
 import java.util.Random;
 
 /**
@@ -118,9 +118,9 @@ public class Philosopher extends BaseThread
 			if(methodToExe == 2)
 			{
 				// Some monitor ops down here...
-				DiningPhilosophers.soMonitor.requestTalk();
+				DiningPhilosophers.soMonitor.requestTalk(getTID());
 				talk();
-				DiningPhilosophers.soMonitor.endTalk();
+				DiningPhilosophers.soMonitor.endTalk(getTID());
 				// ...
 			}
 
